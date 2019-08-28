@@ -18,19 +18,45 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         userNameLabel.isHidden = true
+        
+        if let userName = UserDefaults.standard.value(forKey: "userName") {
+            userNameLabel.isHidden = false
+            userNameLabel.text = userName as? String
+        }
     }
 
 
     @IBAction func donePressed() {
         
+        guard let firstName = firstNameTextField.text, !(firstName.isEmpty) else {
+            wrongFormatAlert()
+            return
+        }
         
+        guard let secondName = secondNameTextField.text, !(secondName.isEmpty) else {
+            wrongFormatAlert()
+            return
+        }
+        
+        if let _ = Double(firstName) {
+            wrongFormatAlert()
+        } else if let _ = Double(secondName) {
+            wrongFormatAlert()
+        } else {
+            userNameLabel.isHidden = false
+            userNameLabel.text = firstName + " " + secondName
+            UserDefaults.standard.set(userNameLabel.text, forKey: "userName")
+        }
+        
+        firstNameTextField.text = nil
+        secondNameTextField.text = nil
     }
     
 }
 
 extension ViewController {
     
-    func wrongFormatAlert() {
+    private func wrongFormatAlert() {
         
         let alert = UIAlertController(
             title: "Wrong Format!",
